@@ -8,7 +8,7 @@ if [[ -z "$PLATFORM" ]]; then
 fi
 
 DISABLE="--disable-iconv --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf --disable-xlib"
-ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libopus --enable-libxml2 --enable-libsrt --enable-libwebp --enable-libaom --enable-libsvtav1 --enable-libzimg"
+ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libharfbuzz --enable-libopus --enable-libxml2 --enable-libsrt --enable-libwebp --enable-libaom --enable-libsvtav1 --enable-libzimg"
 ENABLE_VULKAN="--enable-vulkan --enable-hwaccel=h264_vulkan --enable-hwaccel=hevc_vulkan --enable-hwaccel=av1_vulkan"
 
 if [[ "$EXTENSION" == *gpl ]]; then
@@ -25,6 +25,7 @@ SRT_CONFIG="-DENABLE_APPS:BOOL=OFF -DENABLE_ENCRYPTION:BOOL=ON -DENABLE_SHARED:B
 WEBP_CONFIG="-DWEBP_BUILD_ANIM_UTILS=OFF -DWEBP_BUILD_CWEBP=OFF -DWEBP_BUILD_DWEBP=OFF -DWEBP_BUILD_EXTRAS=OFF -DWEBP_BUILD_GIF2WEBP=OFF -DWEBP_BUILD_IMG2WEBP=OFF -DWEBP_BUILD_VWEBP=OFF -DWEBP_BUILD_WEBPINFO=OFF -DWEBP_BUILD_WEBPMUX=OFF -DWEBP_BUILD_WEBP_JS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib"
 LIBAOM_CONFIG="-DENABLE_TESTS:BOOL=OFF -DENABLE_TESTDATA:BOOL=OFF -DENABLE_TOOLS:BOOL=OFF -DENABLE_EXAMPLES:BOOL=OFF -DENABLE_DOCS:BOOL=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
 LIBSVTAV1_CONFIG="-DBUILD_APPS:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
+HARFBUZZ_CONFIG="-DCMAKE_BUILD_TYPE=Release -DHB_BUILD_SUBSET:BOOL=ON -DHB_BUILD_UTILS:BOOL=OFF -DHB_HAVE_CAIRO:BOOL=OFF -DHB_HAVE_FREETYPE:BOOL=ON -DHB_HAVE_GLIB:BOOL=OFF -DHB_HAVE_GOBJECT:BOOL=OFF -DHB_HAVE_GRAPHITE2:BOOL=OFF -DHB_HAVE_ICU:BOOL=OFF -DHB_HAVE_INTROSPECTION:BOOL=OFF -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
 
 NASM_VERSION=2.14
 ZLIB=zlib-1.3.1
@@ -40,6 +41,7 @@ X265=3.4
 VPX_VERSION=1.15.2
 ALSA_VERSION=1.2.14
 FREETYPE_VERSION=2.14.1
+HARFBUZZ_VERSION=12.3.0
 MFX_VERSION=1.35.1
 NVCODEC_VERSION=13.0.19.0
 XML2=libxml2-2.9.12
@@ -49,6 +51,8 @@ AOMAV1_VERSION=3.9.1
 SVTAV1_VERSION=3.1.2
 ZIMG_VERSION=3.0.6
 FFMPEG_VERSION=8.0.1
+
+download https://github.com/harfbuzz/harfbuzz/archive/refs/tags/$HARFBUZZ_VERSION.tar.gz harfbuzz-$HARFBUZZ_VERSION.tar.gz
 download https://download.videolan.org/contrib/nasm/nasm-$NASM_VERSION.tar.gz nasm-$NASM_VERSION.tar.gz
 download https://zlib.net/$ZLIB.tar.gz $ZLIB.tar.gz
 download https://downloads.sourceforge.net/project/lame/lame/3.100/$LAME.tar.gz $LAME.tar.gz
@@ -91,6 +95,7 @@ tar --totals -xzf ../$X264.tar.gz
 tar --totals -xzf ../x265-$X265.tar.gz
 tar --totals -xzf ../libvpx-$VPX_VERSION.tar.gz
 tar --totals -xJf ../freetype-$FREETYPE_VERSION.tar.xz
+tar --totals -xzf ../harfbuzz-$HARFBUZZ_VERSION.tar.gz
 tar --totals -xzf ../mfx_dispatch-$MFX_VERSION.tar.gz
 tar --totals -xzf ../nv-codec-headers-$NVCODEC_VERSION.tar.gz
 tar --totals -xzf ../$XML2.tar.gz
@@ -114,6 +119,7 @@ cd ..
 
 export PATH=$INSTALL_PATH/bin:$PATH
 export PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig/
+export PATH=$INSTALL_PATH/bin:$PKG_CONFIG_PATH:$PATH
 
 patch -Np1 -d $LAME < ../../lame.patch
 # patch -Np1 -d $OPENSSL < ../../openssl-android.patch
@@ -263,6 +269,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=arm-linux
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        $CMAKE -DCMAKE_TOOLCHAIN_FILE=${PLATFORM_ROOT}/build/cmake/android.toolchain.cmake -DANDROID_ABI=armeabi-v7a -DANDROID_NATIVE_API_LEVEL=24 -DCMAKE_C_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_CXX_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_EXE_LINKER_FLAGS="-L$INSTALL_PATH/lib/" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -418,6 +431,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=aarch64-linux
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        $CMAKE -DCMAKE_TOOLCHAIN_FILE=${PLATFORM_ROOT}/build/cmake/android.toolchain.cmake -DANDROID_ABI=arm4-v8a -DANDROID_NATIVE_API_LEVEL=24 -DCMAKE_C_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_CXX_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_EXE_LINKER_FLAGS="-L$INSTALL_PATH/lib/" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -570,6 +590,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=i686-linux
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        $CMAKE -DCMAKE_TOOLCHAIN_FILE=${PLATFORM_ROOT}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86 -DANDROID_NATIVE_API_LEVEL=24 -DCMAKE_C_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_CXX_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_EXE_LINKER_FLAGS="-L$INSTALL_PATH/lib/" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -721,6 +748,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=x86_64-linux
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        $CMAKE -DCMAKE_TOOLCHAIN_FILE=${PLATFORM_ROOT}/build/cmake/android.toolchain.cmake -DANDROID_ABI=x86_64 -DANDROID_NATIVE_API_LEVEL=24 -DCMAKE_C_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_CXX_FLAGS="-I$INSTALL_PATH/include/" -DCMAKE_EXE_LINKER_FLAGS="-L$INSTALL_PATH/lib/" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -871,6 +905,13 @@ EOF
         fi
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CC="gcc -m32 -fPIC" CXX="g++ -m32 -fPIC" CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1020,6 +1061,13 @@ EOF
 #        fi
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CC="gcc -m64" CXX="g++ -m64" CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1220,6 +1268,18 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        if [ $CROSSCOMPILE -eq 1 ]
+        then
+          $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_VERSION=1 -DCMAKE_SYSTEM_PROCESSOR=armv6 -DCMAKE_CXX_FLAGS="$CXXFLAGS -fPIC" -DCMAKE_C_FLAGS="$CFLAGS -fPIC" -DCMAKE_C_COMPILER=arm-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=arm-linux-gnueabihf-g++ -DCMAKE_STRIP=arm-linux-gnueabihf-strip -DCMAKE_FIND_ROOT_PATH=arm-linux-gnueabih -DAOM_TARGET_CPU=generic $HARFBUZZ_CONFIG ..
+        else
+          $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        fi
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1391,6 +1451,13 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_VERSION=1 -DCMAKE_SYSTEM_PROCESSOR=armv8 -DCMAKE_CXX_FLAGS="$CXXFLAGS -fPIC" -DCMAKE_C_FLAGS="$CFLAGS -fPIC" -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1608,6 +1675,17 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        if [[ "$MACHINE_TYPE" =~ ppc64 ]]; then
+          CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        else
+          CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_VERSION=1 -DCMAKE_SYSTEM_PROCESSOR=ppc64le -DCMAKE_CXX_FLAGS="-m64 -fPIC" -DCMAKE_C_FLAGS="-m64 -fPIC" -DCMAKE_C_COMPILER=powerpc64le-linux-gnu-gcc -DCMAKE_CXX_COMPILER=powerpc64le-linux-gnu-g++ -DCMAKE_STRIP=powerpc64le-linux-gnu-strip -DCMAKE_FIND_ROOT_PATH=powerpc64le-linux-gnu $HARFBUZZ_CONFIG ..
+        fi
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1757,6 +1835,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=aarch64-apple-darwin
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH -DCMAKE_SYSTEM_NAME=Darwin -DCMAKE_SYSTEM_VERSION=1 -DCMAKE_SYSTEM_PROCESSOR=armv8 -DCMAKE_CXX_FLAGS="$CXXFLAGS -fPIC" -DCMAKE_C_FLAGS="$CFLAGS -fPIC" -DCMAKE_C_COMPILER="clang" -DCMAKE_CXX_COMPILER="clang++" $HARFBUZZ_CONFIG -DAOM_ARCH_AARCH64=1 -DCONFIG_RUNTIME_CPU_DETECT:BOOL=OFF -DENABLE_NEON_I8MM=OFF ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1891,6 +1976,13 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        $CMAKE -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -2033,6 +2125,13 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CC="gcc -m32" CXX="g++ -m32" CFLAGS="-I$INSTALL_PATH/include/" CXXFLAGS="-I$INSTALL_PATH/include/" LDFLAGS="-L$INSTALL_PATH/lib/" $CMAKE -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -2174,6 +2273,13 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        mkdir -p build_release
+        cd build_release
+        CC="gcc -m64" CXX="g++ -m64" $CMAKE -G "MSYS Makefiles" -DCMAKE_INSTALL_PREFIX=$INSTALL_PATH $HARFBUZZ_CONFIG ..
+        make -j $MAKEJ
+        make install
+        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
