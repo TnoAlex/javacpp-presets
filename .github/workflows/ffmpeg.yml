@@ -31,12 +31,8 @@ jobs:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-ubuntu
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-ubuntu
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
 #  android-x86:
 #    runs-on: ubuntu-22.04
 #    strategy:
@@ -50,12 +46,8 @@ jobs:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-ubuntu
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-ubuntu
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
 #  linux-armhf:
 #    runs-on: ubuntu-22.04
 #    strategy:
@@ -69,12 +61,8 @@ jobs:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-ubuntu
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-ubuntu
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
 #  linux-ppc64le:
 #    runs-on: ubuntu-22.04
 #    strategy:
@@ -95,36 +83,24 @@ jobs:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-ubuntu
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-ubuntu
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
   macosx-arm64:
     runs-on: macos-15-intel
     strategy:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-macosx
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-macosx
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
   macosx-x86_64:
     runs-on: macos-15-intel
     strategy:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-macosx
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-macosx
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
 #  windows-x86:
 #    runs-on: windows-2022
 #    strategy:
@@ -138,20 +114,12 @@ jobs:
       matrix:
         ext: ["", -gpl]
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/deploy-windows
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/deploy-windows
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
   platform:
 #    needs: [android-arm, android-arm64, android-x86, android-x86_64, linux-armhf, linux-arm64, linux-ppc64le, linux-x86, linux-x86_64, macosx-arm64, macosx-x86_64, windows-x86, windows-x86_64]
     needs: [android-arm64, android-x86_64, linux-arm64, linux-x86_64, macosx-arm64, macosx-x86_64, windows-x86_64]
     runs-on: ubuntu-22.04
     steps:
-<<<<<<< HEAD
-      - uses: TnoAlex/javacpp-presets/.github/actions/redeploy
-=======
       - uses: actions/checkout@v4
       - uses: ./.github/actions/redeploy
->>>>>>> a4d2dc514e68c513f24a3557dd203dc3b16e17c8
