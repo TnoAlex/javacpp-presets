@@ -281,7 +281,7 @@ EOF
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv7'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG 
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG  --pkg-config=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -455,7 +455,7 @@ EOF
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv8-a'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG 
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG  --pkg-config=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -626,7 +626,7 @@ EOF
         echo "cpu_family = 'x86'" >> android-i386.ini
         echo "cpu = 'x86'" >> android-i386.ini
         echo "endian = 'little'" >> android-i386.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG 
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG  --pkg-config=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -796,7 +796,7 @@ EOF
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
         echo "cpu = 'x86_64'" >> android-amd64.ini
         echo "endian = 'little'" >> android-amd64.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG 
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG --pkg-config=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -1508,8 +1508,20 @@ EOF
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        mkdir -p build_release
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
+        echo "[binaries]" >> linux-arm.ini
+        echo "c = 'aarch64-linux-gnu-gcc'" >> linux-arm.ini
+        echo "cpp = 'aarch64-linux-gnu-g++'" >> linux-arm.ini
+        echo "ar = 'aarch64-linux-gnu-ar'" >> linux-arm.ini
+        echo "windres = 'aarch64-linux-gnu-windres'" >> linux-arm.ini
+        echo "strip = 'aarch64-linux-gnu-strip'" >> linux-arm.ini
+        echo "pkg-config='/usr/bin/pkg-config'" >> linux-arm.ini
+        echo "" >> linux-arm.ini
+        echo "[host_machine]" >> linux-arm.ini
+        echo "system = 'linux'" >> linux-arm.ini
+        echo "cpu_family = 'aarch64'" >> linux-arm.ini
+        echo "cpu = 'armv8-a'" >> linux-arm.ini
+        echo "endian = 'little'" >> linux-arm.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
         cd build
         meson compile
         meson install
@@ -1904,7 +1916,7 @@ EOF
         make -j $MAKEJ
         make install
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args=" -arch arm64" -Dcpp_args=" -arch arm64"
         cd build
         meson compile
         meson install
