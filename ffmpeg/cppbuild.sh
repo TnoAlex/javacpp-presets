@@ -281,6 +281,7 @@ EOF
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv7'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
+        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -455,6 +456,7 @@ EOF
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv8-a'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
+        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -626,6 +628,7 @@ EOF
         echo "cpu_family = 'x86'" >> android-i386.ini
         echo "cpu = 'x86'" >> android-i386.ini
         echo "endian = 'little'" >> android-i386.ini
+        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -796,6 +799,7 @@ EOF
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
         echo "cpu = 'x86_64'" >> android-amd64.ini
         echo "endian = 'little'" >> android-amd64.ini
+        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -1328,8 +1332,10 @@ EOF
             echo "cpu_family = 'arm'" >> linux-arm.ini
             echo "cpu = 'armv6'" >> linux-arm.ini
             echo "endian = 'little'" >> linux-arm.ini
+            PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
         else
+            PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG 
         fi
         cd build
@@ -1521,6 +1527,7 @@ EOF
         echo "cpu_family = 'aarch64'" >> linux-arm.ini
         echo "cpu = 'armv8-a'" >> linux-arm.ini
         echo "endian = 'little'" >> linux-arm.ini
+        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
         cd build
         meson compile
@@ -1745,6 +1752,7 @@ EOF
         make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
         if [[ "$MACHINE_TYPE" =~ ppc64 ]]; then
+            PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
         else
             echo "[binaries]" >> linux-ppc.ini
@@ -1760,6 +1768,7 @@ EOF
             echo "cpu_family = 'ppc64'" >> linux-ppc.ini
             echo "cpu = 'ppc64'" >> linux-ppc.ini
             echo "endian = 'little'" >> linux-ppc.ini
+            PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-ppc.ini
         fi
         cd build
@@ -1916,7 +1925,24 @@ EOF
         make -j $MAKEJ
         make install
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args=" -arch arm64" -Dcpp_args=" -arch arm64"
+        echo "[binaries]" >> macos-arm.ini
+        echo "c = 'clang'" >> macos-arm.ini
+        echo "cpp = 'clang++'" >> macos-arm.ini
+        echo "ar = 'ar'" >> macos-arm.ini
+        echo "windres = 'windres'" >> macos-arm.ini
+        echo "strip = 'strip'" >> macos-arm.ini
+        echo "pkg-config='pkg-config'" >> macos-arm.ini
+        echo "" >> macos-arm.ini
+        echo "[properties]" >> macos-arm.ini
+        echo "c_args = ['-arch', 'arm64']" >> macos-arm.ini
+        echo "cpp_args = ['-arch', 'arm64']" >> macos-arm.ini
+        echo "needs_exe_wrapper = true" >> macos-arm.ini
+        echo "[host_machine]" >> macos-arm.ini
+        echo "system = 'darwin'" >> macos-arm.ini
+        echo "cpu_family = 'aarch64'" >> macos-arm.ini
+        echo "cpu = 'arm64'" >> macos-arm.ini
+        echo "endian = 'little'" >> macos-arm.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
         cd build
         meson compile
         meson install
