@@ -1942,7 +1942,7 @@ EOF
         echo "cpu_family = 'aarch64'" >> macos-arm.ini
         echo "cpu = 'arm64'" >> macos-arm.ini
         echo "endian = 'little'" >> macos-arm.ini
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=macos-arm.ini
         cd build
         meson compile
         meson install
