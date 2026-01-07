@@ -1530,11 +1530,12 @@ EOF
         echo "[host_machine]" >> linux-arm.ini
         echo "system = 'linux'" >> linux-arm.ini
         echo "cpu_family = 'aarch64'" >> linux-arm.ini
-        echo "cpu = 'armv8-a'" >> linux-arm.ini
+        echo "cpu = 'aarch64'" >> linux-arm.ini
         echo "endian = 'little'" >> linux-arm.ini
         PKG_CONFIG=/usr/bin/pkg-config
         PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
+        cat build/meson-logs/meson-log.txt
         cd build
         meson compile
         meson install
