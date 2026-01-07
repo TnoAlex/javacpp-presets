@@ -275,6 +275,8 @@ EOF
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
         echo "pkg-config='/usr/bin/pkg-config'" >> android-arm.ini
+        echo "[properties]" >> android-arm.ini
+        echo "needs_exe_wrapper = true" >> android-arm.ini
         echo "" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
@@ -451,11 +453,12 @@ EOF
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
         echo "pkg-config='/usr/bin/pkg-config'" >> android-arm.ini
-        echo "" >> android-arm.ini
+        echo "[properties]" >> android-arm.ini
+        echo "needs_exe_wrapper = true" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
-        echo "cpu_family = 'arm'" >> android-arm.ini
-        echo "cpu = 'armv8-a'" >> android-arm.ini
+        echo "cpu_family = 'aarch64'" >> android-arm.ini
+        echo "cpu = 'aarch64'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
         PKG_CONFIG=/usr/bin/pkg-config
         PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
@@ -624,7 +627,8 @@ EOF
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-i386.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-i386.ini
         echo "pkg-config='/usr/bin/pkg-config'" >> android-i386.ini
-        echo "" >>android-i386.ini
+        echo "[properties]" >> android-i386.ini
+        echo "needs_exe_wrapper = true" >> android-i386.ini
         echo "[host_machine]" >> android-i386.ini
         echo "system = 'android'" >> android-i386.ini
         echo "cpu_family = 'x86'" >> android-i386.ini
@@ -796,7 +800,8 @@ EOF
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-amd64.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-amd64.ini
         echo "pkg-config='/usr/bin/pkg-config'" >> android-amd64.ini
-        echo "" >> android-amd64.ini
+        echo "[properties]" >> android-amd64.ini
+        echo "needs_exe_wrapper = true" >> android-amd64.ini
         echo "[host_machine]" >> android-amd64.ini
         echo "system = 'android'" >> android-amd64.ini
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
@@ -1529,7 +1534,8 @@ EOF
         echo "windres = 'aarch64-linux-gnu-windres'" >> linux-arm.ini
         echo "strip = 'aarch64-linux-gnu-strip'" >> linux-arm.ini
         echo "pkg-config='/usr/bin/pkg-config'" >> linux-arm.ini
-        echo "" >> linux-arm.ini
+        echo "[properties]" >> linux-arm.ini
+        echo "needs_exe_wrapper = true" >> linux-arm.ini
         echo "[host_machine]" >> linux-arm.ini
         echo "system = 'linux'" >> linux-arm.ini
         echo "cpu_family = 'aarch64'" >> linux-arm.ini
