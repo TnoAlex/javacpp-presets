@@ -1518,6 +1518,9 @@ EOF
         make install
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
+        echo "$(which pkg-config)"
+        echo "$(where pkg-config)"
+        trap 'cat ./build/meson-logs/meson-log.txt' EXIT
         cd ../harfbuzz-$HARFBUZZ_VERSION
         echo "[binaries]" >> linux-arm.ini
         echo "c = 'aarch64-linux-gnu-gcc'" >> linux-arm.ini
@@ -1535,7 +1538,6 @@ EOF
         PKG_CONFIG=/usr/bin/pkg-config
         PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
-        cat build/meson-logs/meson-log.txt
         cd build
         meson compile
         meson install
