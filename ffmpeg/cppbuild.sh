@@ -274,17 +274,14 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-arm.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
-        echo "pkg-config='/usr/bin/pkg-config'" >> android-arm.ini
         echo "[properties]" >> android-arm.ini
-        echo "needs_exe_wrapper = true" >> android-arm.ini
+        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-arm.ini
         echo "" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv7'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        PKG_CONFIG=/usr/bin/pkg-config
-        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -452,16 +449,13 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-arm.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
-        echo "pkg-config='/usr/bin/pkg-config'" >> android-arm.ini
         echo "[properties]" >> android-arm.ini
-        echo "needs_exe_wrapper = true" >> android-arm.ini
+        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
         echo "cpu_family = 'aarch64'" >> android-arm.ini
         echo "cpu = 'aarch64'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        PKG_CONFIG=/usr/bin/pkg-config
-        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -626,16 +620,13 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-i386.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-i386.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-i386.ini
-        echo "pkg-config='/usr/bin/pkg-config'" >> android-i386.ini
         echo "[properties]" >> android-i386.ini
-        echo "needs_exe_wrapper = true" >> android-i386.ini
+        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-i386.ini
         echo "[host_machine]" >> android-i386.ini
         echo "system = 'android'" >> android-i386.ini
         echo "cpu_family = 'x86'" >> android-i386.ini
         echo "cpu = 'x86'" >> android-i386.ini
         echo "endian = 'little'" >> android-i386.ini
-        PKG_CONFIG=/usr/bin/pkg-config
-        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG
         cd build
         meson compile
@@ -799,16 +790,13 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-amd64.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-amd64.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-amd64.ini
-        echo "pkg-config='/usr/bin/pkg-config'" >> android-amd64.ini
         echo "[properties]" >> android-amd64.ini
-        echo "needs_exe_wrapper = true" >> android-amd64.ini
+        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-amd64.ini
         echo "[host_machine]" >> android-amd64.ini
         echo "system = 'android'" >> android-amd64.ini
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
         echo "cpu = 'x86_64'" >> android-amd64.ini
         echo "endian = 'little'" >> android-amd64.ini
-        PKG_CONFIG=/usr/bin/pkg-config
-        PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
         meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG
         cd build
         meson compile

@@ -50,6 +50,13 @@ runs:
         rm "C:/msys64/mingw32/bin/clang-cl.exe" "C:/msys64/mingw64/bin/clang-cl.exe" "C:/msys64/mingw32/bin/cmake.exe" "C:/msys64/mingw64/bin/cmake.exe"
         rm "C:/Strawberry/c/lib/libz.a" "C:/Strawberry/c/lib/libzlib.a" "C:/Strawberry/c/lib/libzdll.a" "C:/Strawberry/c/bin/cmake.exe"
 
+        
+        if "%CI_DEPLOY_PLATFORM%"=="windows-arm64" (
+          C:\msys64\usr\bin\bash -lc "pacman -S --needed --noconfirm mingw-w64-aarch64-meson"
+        ) else (
+          C:\msys64\usr\bin\bash -lc "pacman -S --needed --noconfirm mingw-w64-x86_64-meson"
+        )
+
         curl -LO https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.9.6/apache-maven-3.9.6-bin.tar.gz
         bash -c "tar -xzf apache-maven-3.9.6-bin.tar.gz -C 'C:/Program Files/'"
 
@@ -125,9 +132,9 @@ runs:
           bash -c "pacman -U --noconfirm *.pkg.tar.zst"
         ) else (
           if "%CI_DEPLOY_PLATFORM%"=="windows-arm64" (
-            bash -c "pacman -Rc --noconfirm mingw-w64-clang-aarch64-headers-git mingw-w64-clang-aarch64-zlib mingw-w64-aarch64-meson"
+            bash -c "pacman -Rc --noconfirm mingw-w64-clang-aarch64-headers-git mingw-w64-clang-aarch64-zlib"
           ) else (
-            bash -c "pacman -Rc --noconfirm mingw-w64-i686-headers-git mingw-w64-x86_64-headers-git mingw-w64-i686-zlib mingw-w64-x86_64-zlib mingw-w64-x86_64-meson"
+            bash -c "pacman -Rc --noconfirm mingw-w64-i686-headers-git mingw-w64-x86_64-headers-git mingw-w64-i686-zlib mingw-w64-x86_64-zlib"
           )
         )
 
