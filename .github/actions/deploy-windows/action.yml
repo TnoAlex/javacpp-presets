@@ -55,7 +55,7 @@ runs:
 
         python -m pip install gdown || python -m pip install gdown
         
-        C:\msys64\mingw64\bin\python -m pip insatll meson
+        C:\msys64\mingw64\bin\python -m pip install meson
 
         if not "%CI_DEPLOY_NEED_BAZEL%"=="" (
           echo Installing Bazel
