@@ -111,7 +111,7 @@ fi
 
 cd nasm-$NASM_VERSION
 # fix for build with GCC 8.x
-sed -i '/^\s*#\s*typedef _Bool bool/d' include/compiler.h
+sedinplace '/^\s*#\s*typedef _Bool bool/d' include/compiler.h
 sedinplace 's/void pure_func/void/g' include/nasmlib.h
 ./configure --prefix=$INSTALL_PATH 
 make -j $MAKEJ V=0
