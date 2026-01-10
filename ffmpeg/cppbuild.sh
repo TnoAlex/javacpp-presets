@@ -113,7 +113,8 @@ patch -Np1 -d nasm-$NASM_VERSION < ../../nasm.patch
 cd nasm-$NASM_VERSION
 # fix for build with GCC 8.x
 sedinplace 's/void pure_func/void/g' include/nasmlib.h
-./configure --prefix=$INSTALL_PATH
+CC="gcc -std=gnu99" CXX="g++ -std=gnu99"
+./configure --prefix=$INSTALL_PATH 
 make -j $MAKEJ V=0
 make install
 cd ..
