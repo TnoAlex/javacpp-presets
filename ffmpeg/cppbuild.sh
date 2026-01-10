@@ -2382,8 +2382,13 @@ EOF
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        CC="gcc -m64" CXX="g++ -m64"
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
+        echo "[binaries]" >> windows-native.ini
+        echo "c = 'gcc'" >> windows-native.ini
+        echo "cpp = 'g++'" >> windows-native.ini
+        echo "ar = 'ar'" >> windows-native.ini
+        echo "windres = 'windres'" >> windows-native.ini
+        echo "strip = 'strip'" >> windows-native.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --native-file windows-native.ini
         cd build
         meson compile
         meson install
