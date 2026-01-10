@@ -1,0 +1,11 @@
+--- nasm-2.14/include/compiler.h	2026-01-10 10:35:49.733845100 +0800
++++ nasm-2.14/include/compiler.h	2026-01-10 10:32:35.321279500 +0800
+@@ -163,7 +163,7 @@
+ # ifdef HAVE_STDBOOL_H
+ #  include <stdbool.h>
+ # elif defined(HAVE__BOOL)
+-#  typedef _Bool bool
++  typedef _Bool bool
+ #  define false 0
+ #  define true 1
+ # else
