@@ -2382,7 +2382,7 @@ EOF
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args="-m64" -Dcpp_args="-m46"
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args="-m64" -Dcpp_args="-m64"
         cd build
         meson compile
         meson install
