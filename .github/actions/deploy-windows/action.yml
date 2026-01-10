@@ -131,6 +131,8 @@ runs:
             bash -c "pacman -Rc --noconfirm mingw-w64-i686-headers-git mingw-w64-x86_64-headers-git mingw-w64-i686-zlib mingw-w64-x86_64-zlib"
           )
         )
+        curl -LO http://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-gcc-libs-13.2.0-6-any.pkg.tar.zst
+        bash -c "pacman -U --noconfirm *.pkg.tar.zst"
 
         if "%CI_DEPLOY_PLATFORM%"=="windows-x86_64" if not "%CI_DEPLOY_NEED_CUDA%"=="" (
           echo Installing CUDA, cuDNN, nvCOMP, etc

@@ -108,12 +108,10 @@ if [[ "${ACLOCAL_PATH:-}" == C:\\msys64\\* ]]; then
     export ACLOCAL_PATH=/mingw64/share/aclocal:/usr/share/aclocal
 fi
 
-patch -Np1 -d nasm-$NASM_VERSION < ../../nasm.patch
 
 cd nasm-$NASM_VERSION
 # fix for build with GCC 8.x
 sedinplace 's/void pure_func/void/g' include/nasmlib.h
-CC="gcc -std=gnu99" CXX="g++ -std=gnu99"
 ./configure --prefix=$INSTALL_PATH 
 make -j $MAKEJ V=0
 make install
