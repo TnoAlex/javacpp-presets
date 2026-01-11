@@ -283,7 +283,7 @@ EOF
         echo "cpu_family = 'arm'" >> android-arm.ini
         echo "cpu = 'armv7'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG --pkg-config-path=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -456,7 +456,7 @@ EOF
         echo "cpu_family = 'aarch64'" >> android-arm.ini
         echo "cpu = 'aarch64'" >> android-arm.ini
         echo "endian = 'little'" >> android-arm.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-arm.ini $HARFBUZZ_CONFIG --pkg-config-path=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -626,7 +626,7 @@ EOF
         echo "cpu_family = 'x86'" >> android-i386.ini
         echo "cpu = 'x86'" >> android-i386.ini
         echo "endian = 'little'" >> android-i386.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-i386.ini $HARFBUZZ_CONFIG --pkg-config-path=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -795,7 +795,7 @@ EOF
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
         echo "cpu = 'x86_64'" >> android-amd64.ini
         echo "endian = 'little'" >> android-amd64.ini
-        meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG
+        meson setup build --prefix=$INSTALL_PATH --cross-file=android-amd64.ini $HARFBUZZ_CONFIG --pkg-config-path=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -1329,7 +1329,7 @@ EOF
             echo "endian = 'little'" >> linux-arm.ini
             PKG_CONFIG=/usr/bin/pkg-config
             PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
-            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
+            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini --pkg-config-path=/usr/bin/pkg-config
         else
             PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG 
@@ -1528,7 +1528,7 @@ EOF
         echo "endian = 'little'" >> linux-arm.ini
         PKG_CONFIG=/usr/bin/pkg-config
         PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini --pkg-config-path=/usr/bin/pkg-config
         cd build
         meson compile
         meson install
@@ -1769,7 +1769,7 @@ EOF
             echo "cpu = 'ppc64'" >> linux-ppc.ini
             echo "endian = 'little'" >> linux-ppc.ini
             PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
-            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-ppc.ini
+            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-ppc.ini --pkg-config-path=/usr/bin/pkg-config
         fi
         cd build
         meson compile
