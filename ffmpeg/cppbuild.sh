@@ -276,8 +276,7 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-arm.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
-        echo "[properties]" >> android-arm.ini
-        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-arm.ini
+        echo "pkg-config = '/usr/bin/pkg-config'" >> android-arm.ini
         echo "" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
@@ -451,8 +450,7 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-arm.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-arm.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-arm.ini
-        echo "[properties]" >> android-arm.ini
-        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-arm.ini
+        echo "pkg-config = '/usr/bin/pkg-config'" >> android-arm.ini
         echo "[host_machine]" >> android-arm.ini
         echo "system = 'android'" >> android-arm.ini
         echo "cpu_family = 'aarch64'" >> android-arm.ini
@@ -622,8 +620,7 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-i386.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-i386.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-i386.ini
-        echo "[properties]" >> android-i386.ini
-        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-i386.ini
+        echo "pkg-config = '/usr/bin/pkg-config'" >> android-i386.ini
         echo "[host_machine]" >> android-i386.ini
         echo "system = 'android'" >> android-i386.ini
         echo "cpu_family = 'x86'" >> android-i386.ini
@@ -792,8 +789,7 @@ EOF
         echo "ar = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar'" >> android-amd64.ini
         echo "windres = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-windres'" >> android-amd64.ini
         echo "strip = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip'" >> android-amd64.ini
-        echo "[properties]" >> android-amd64.ini
-        echo "sys_root = '${PLATFORM_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/sysroot'" >> android-amd64.ini
+        echo "pkg-config = '/usr/bin/pkg-config'" >> android-amd64.ini
         echo "[host_machine]" >> android-amd64.ini
         echo "system = 'android'" >> android-amd64.ini
         echo "cpu_family = 'x86_64'" >> android-amd64.ini
@@ -1514,7 +1510,6 @@ EOF
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
         echo "$(which pkg-config)"
-        echo "$(where pkg-config)"
         trap 'cat ./build/meson-logs/meson-log.txt' EXIT
         cd ../harfbuzz-$HARFBUZZ_VERSION
         echo "[binaries]" >> linux-arm.ini
@@ -1766,7 +1761,7 @@ EOF
             echo "ar = 'powerpc64le-linux-gnu-ar'" >> linux-ppc.ini
             echo "windres = 'powerpc64le-linux-gnu-windres'" >> linux-ppc.ini
             echo "strip = 'powerpc64le-linux-gnu-strip'" >> linux-ppc.ini
-            echo "pkg-config='pkg-config'" >> linux-ppc.ini
+            echo "pkg-config = '/usr/bin/pkg-config'" >> linux-ppc.ini
             echo "" >> linux-ppc.ini
             echo "[host_machine]" >> linux-ppc.ini
             echo "system = 'linux'" >> linux-ppc.ini
@@ -2235,7 +2230,13 @@ EOF
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args="-m32" -Dcpp_args="-m32"
+        echo "[binaries]" >> windows-native.ini
+        echo "c = 'gcc'" >> windows-native.ini
+        echo "cpp = 'g++'" >> windows-native.ini
+        echo "ar = 'ar'" >> windows-native.ini
+        echo "windres = 'windres'" >> windows-native.ini
+        echo "strip = 'strip'" >> windows-native.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --native-file windows-native.ini -Dcpp_args="-m32" -Dc_args="-m32"
         cd build
         meson compile
         meson install
@@ -2388,7 +2389,7 @@ EOF
         echo "ar = 'ar'" >> windows-native.ini
         echo "windres = 'windres'" >> windows-native.ini
         echo "strip = 'strip'" >> windows-native.ini
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --native-file windows-native.ini
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --native-file windows-native.ini -Dcpp_args="-m64" -Dc_args="-m64"
         cd build
         meson compile
         meson install
