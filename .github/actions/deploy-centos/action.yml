@@ -50,6 +50,7 @@ runs:
         ln -sf /opt/gradle-7.1.1/bin/gradle /usr/bin/gradle
 
         python3 -m pip install gdown || python3 -m pip install gdown
+        python3 -m pip install meson
 
         if [[ $CI_DEPLOY_PLATFORM == android-* ]]; then
           curl -LO https://dl.google.com/android/repository/android-ndk-r21e-linux-x86_64.zip
