@@ -56,6 +56,7 @@ runs:
 
         python -m pip install gdown || python -m pip install gdown
         python -m pip install meson
+        python -m pip install ninja
 
         if not "%CI_DEPLOY_NEED_BAZEL%"=="" (
           echo Installing Bazel
@@ -273,6 +274,7 @@ runs:
 
         where bash
         where meson
+        where ninja
         where curl
         where git
         where cl
