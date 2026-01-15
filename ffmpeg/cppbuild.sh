@@ -6,6 +6,7 @@ if [[ -z "$PLATFORM" ]]; then
     popd
     exit
 fi
+
 DISABLE="--disable-iconv --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf --disable-xlib"
 ENABLE="--enable-shared --enable-version3 --enable-runtime-cpudetect --enable-zlib --enable-libmp3lame --enable-libspeex --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libvo-amrwbenc --enable-openssl --enable-libopenh264 --enable-libvpx --enable-libfreetype --enable-libharfbuzz --enable-libopus --enable-libxml2 --enable-libsrt --enable-libwebp --enable-libaom --enable-libsvtav1 --enable-libzimg"
 ENABLE_VULKAN="--enable-vulkan --enable-hwaccel=h264_vulkan --enable-hwaccel=hevc_vulkan --enable-hwaccel=av1_vulkan"
@@ -19,12 +20,12 @@ fi
 # DISABLE="--disable-iconv --disable-libxcb --disable-opencl --disable-sdl2 --disable-bzlib --disable-lzma --disable-linux-perf --disable-everything"
 # ENABLE="--enable-shared --enable-runtime-cpudetect --enable-libopenh264 --enable-encoder=libopenh264 --enable-encoder=aac --enable-encoder=mjpeg --enable-decoder=h264 --enable-decoder=aac --enable-decoder=mjpeg --enable-parser=h264 --enable-parser=aac --enable-parser=mjpeg --enable-muxer=mp4 --enable-muxer=rtsp --enable-muxer=mjpeg --enable-demuxer=mov --enable-demuxer=rtsp --enable-demuxer=mjpeg --enable-protocol=file --enable-protocol=http --enable-protocol=rtp --enable-protocol=rtmp"
 
+HARFBUZZ_CONFIG="--default-library=static -Dcairo=disabled -Dchafa=disabled -Dcoretext=disabled -Ddirectwrite=disabled -Ddocs=disabled -Dfreetype=enabled -Dglib=disabled -Dgobject=disabled -Dgraphite=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled --libdir=lib --buildtype=release"
 LIBXML_CONFIG="--enable-static --disable-shared --without-iconv --without-python --without-lzma --with-pic"
 SRT_CONFIG="-DENABLE_APPS:BOOL=OFF -DENABLE_ENCRYPTION:BOOL=ON -DENABLE_SHARED:BOOL=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
 WEBP_CONFIG="-DWEBP_BUILD_ANIM_UTILS=OFF -DWEBP_BUILD_CWEBP=OFF -DWEBP_BUILD_DWEBP=OFF -DWEBP_BUILD_EXTRAS=OFF -DWEBP_BUILD_GIF2WEBP=OFF -DWEBP_BUILD_IMG2WEBP=OFF -DWEBP_BUILD_VWEBP=OFF -DWEBP_BUILD_WEBPINFO=OFF -DWEBP_BUILD_WEBPMUX=OFF -DWEBP_BUILD_WEBP_JS=OFF -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib"
 LIBAOM_CONFIG="-DENABLE_TESTS:BOOL=OFF -DENABLE_TESTDATA:BOOL=OFF -DENABLE_TOOLS:BOOL=OFF -DENABLE_EXAMPLES:BOOL=OFF -DENABLE_DOCS:BOOL=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
 LIBSVTAV1_CONFIG="-DBUILD_APPS:BOOL=OFF -DBUILD_TESTING:BOOL=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_INCLUDEDIR=include -DCMAKE_INSTALL_BINDIR=bin"
-HARFBUZZ_CONFIG="--default-library=static -Dcairo=disabled -Dchafa=disabled -Dcoretext=disabled -Ddirectwrite=disabled -Ddocs=disabled -Dfreetype=enabled -Dglib=disabled -Dgobject=disabled -Dgraphite=disabled -Dicu=disabled -Dtests=disabled -Dintrospection=disabled --libdir=lib --buildtype=release"
 
 NASM_VERSION=2.14
 ZLIB=zlib-1.3.1
@@ -50,8 +51,6 @@ AOMAV1_VERSION=3.9.1
 SVTAV1_VERSION=3.1.2
 ZIMG_VERSION=3.0.6
 FFMPEG_VERSION=8.0.1
-
-download https://github.com/harfbuzz/harfbuzz/archive/refs/tags/$HARFBUZZ_VERSION.tar.gz harfbuzz-$HARFBUZZ_VERSION.tar.gz
 download https://download.videolan.org/contrib/nasm/nasm-$NASM_VERSION.tar.gz nasm-$NASM_VERSION.tar.gz
 download https://zlib.net/$ZLIB.tar.gz $ZLIB.tar.gz
 download https://downloads.sourceforge.net/project/lame/lame/3.100/$LAME.tar.gz $LAME.tar.gz
@@ -66,6 +65,7 @@ download https://github.com/videolan/x265/archive/$X265.tar.gz x265-$X265.tar.gz
 download https://github.com/webmproject/libvpx/archive/v$VPX_VERSION.tar.gz libvpx-$VPX_VERSION.tar.gz
 download https://ftp.osuosl.org/pub/blfs/conglomeration/alsa-lib/alsa-lib-$ALSA_VERSION.tar.bz2 alsa-lib-$ALSA_VERSION.tar.bz2
 download https://ftp.osuosl.org/pub/blfs/conglomeration/freetype/freetype-$FREETYPE_VERSION.tar.xz freetype-$FREETYPE_VERSION.tar.xz
+download https://github.com/harfbuzz/harfbuzz/archive/refs/tags/$HARFBUZZ_VERSION.tar.gz harfbuzz-$HARFBUZZ_VERSION.tar.gz
 download https://github.com/lu-zero/mfx_dispatch/archive/$MFX_VERSION.tar.gz mfx_dispatch-$MFX_VERSION.tar.gz
 download http://xmlsoft.org/sources/$XML2.tar.gz $XML2.tar.gz
 download https://github.com/Haivision/srt/archive/refs/tags/v$LIBSRT_VERSION.tar.gz srt-$LIBSRT_VERSION.tar.gz
@@ -108,12 +108,11 @@ if [[ "${ACLOCAL_PATH:-}" == C:\\msys64\\* ]]; then
     export ACLOCAL_PATH=/mingw64/share/aclocal:/usr/share/aclocal
 fi
 
-
 cd nasm-$NASM_VERSION
 # fix for build with GCC 8.x
 sedinplace '/^\s*#\s*typedef _Bool bool/d' include/compiler.h
 sedinplace 's/void pure_func/void/g' include/nasmlib.h
-./configure --prefix=$INSTALL_PATH 
+./configure --prefix=$INSTALL_PATH
 make -j $MAKEJ V=0
 make install
 cd ..
@@ -938,6 +937,12 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=i686-linux CFLAGS="-m32"
         make -j $MAKEJ
         make install
+        cd ../harfbuzz-$HARFBUZZ_VERSION
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args="-m32" -Dcpp_args="-m32"
+        cd build
+        meson compile
+        meson install
+        cd ..
         LIBS=
         if [[ ! -z $(ldconfig -p | grep libva-drm) ]]; then
             cd ../mfx_dispatch-$MFX_VERSION
@@ -950,12 +955,6 @@ EOF
         fi
         cd ../nv-codec-headers-n$NVCODEC_VERSION
         make install PREFIX=$INSTALL_PATH
-        cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG -Dc_args="-m32" -Dcpp_args="-m32"
-        cd build
-        meson compile
-        meson install
-        cd ..
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1093,24 +1092,24 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=x86_64-linux CFLAGS="-m64"
         make -j $MAKEJ
         make install
-        LIBS=
-#        if [[ ! -z $(ldconfig -p | grep libva-drm) ]]; then
-#            cd ../mfx_dispatch-$MFX_VERSION
-#            autoreconf -fiv
-#            PKG_CONFIG_PATH="../lib/pkgconfig" ./configure --prefix=$INSTALL_PATH --disable-shared --enable-static --enable-fast-install --with-pic --host=x86_64-linux CFLAGS="-m64" CXXFLAGS="-m64"
-#            make -j $MAKEJ
-#            make install
-#            ENABLE="$ENABLE --enable-libmfx"
-#            LIBS="-lva-drm -lva-x11 -lva"
-#        fi
-        cd ../nv-codec-headers-n$NVCODEC_VERSION
-        make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
-        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG 
+        meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
         cd build
         meson compile
         meson install
         cd ..
+        LIBS=
+        if [[ ! -z $(ldconfig -p | grep libva-drm) ]]; then
+            cd ../mfx_dispatch-$MFX_VERSION
+            autoreconf -fiv
+            PKG_CONFIG_PATH="../lib/pkgconfig" ./configure --prefix=$INSTALL_PATH --disable-shared --enable-static --enable-fast-install --with-pic --host=x86_64-linux CFLAGS="-m64" CXXFLAGS="-m64"
+            make -j $MAKEJ
+            make install
+            ENABLE="$ENABLE --enable-libmfx"
+            LIBS="-lva-drm -lva-x11 -lva"
+        fi
+        cd ../nv-codec-headers-n$NVCODEC_VERSION
+        make install PREFIX=$INSTALL_PATH
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1309,8 +1308,6 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=arm-linux-gnueabihf
         make -j $MAKEJ
         make install
-        cd ../nv-codec-headers-n$NVCODEC_VERSION
-        make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
         if [ $CROSSCOMPILE -eq 1 ]
         then
@@ -1332,12 +1329,14 @@ EOF
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG --cross-file=linux-arm.ini --pkg-config-path=/usr/bin/pkg-config
         else
             PKG_CONFIG_PATH=$INSTALL_PATH/lib/pkgconfig
-            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG 
+            meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
         fi
         cd build
         meson compile
         meson install
         cd ..
+        cd ../nv-codec-headers-n$NVCODEC_VERSION
+        make install PREFIX=$INSTALL_PATH
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1507,8 +1506,6 @@ EOF
         ./configure --prefix=$INSTALL_PATH --with-bzip2=no --with-harfbuzz=no --with-png=no --with-brotli=no --enable-static --disable-shared --with-pic --host=aarch64-linux-gnu
         make -j $MAKEJ
         make install
-        cd ../nv-codec-headers-n$NVCODEC_VERSION
-        make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
         echo "[binaries]" >> linux-arm.ini
         echo "c = 'aarch64-linux-gnu-gcc'" >> linux-arm.ini
@@ -1529,6 +1526,8 @@ EOF
         meson compile
         meson install
         cd ..
+        cd ../nv-codec-headers-n$NVCODEC_VERSION
+        make install PREFIX=$INSTALL_PATH
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
@@ -1744,8 +1743,6 @@ EOF
         fi
         make -j $MAKEJ
         make install
-        cd ../nv-codec-headers-n$NVCODEC_VERSION
-        make install PREFIX=$INSTALL_PATH
         cd ../harfbuzz-$HARFBUZZ_VERSION
         if [[ "$MACHINE_TYPE" =~ ppc64 ]]; then
             meson setup build --prefix=$INSTALL_PATH $HARFBUZZ_CONFIG
@@ -1769,6 +1766,8 @@ EOF
         meson compile
         meson install
         cd ..
+        cd ../nv-codec-headers-n$NVCODEC_VERSION
+        make install PREFIX=$INSTALL_PATH
         cd ../libaom-$AOMAV1_VERSION
         mkdir -p build_release
         cd build_release
